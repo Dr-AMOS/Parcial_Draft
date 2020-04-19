@@ -19,10 +19,39 @@ public class Empresa {
     }
 
     public void addEmpleado(Empleado emp){
+        planilla.add(emp);
 
     }
 
-    public void quitEmpleado(String empname){
+    public void quitEmpleado(String empname) throws notFoundEmpleado{
+//        planilla.removeIf(obj -> {
+//            if(obj.nombre == empname){
+//                return true;
+//            }
+//            else{
+//                throw new notFoundEmpleado("Empleado no existe en el sistema");
+//                return false;
+//            }
+//        });
 
+        Empleado aux = null;
+
+        for(Empleado emp : planilla){
+            if(emp.getNombre().equals(empname))
+                aux = emp;
+        }
+
+        if(aux != null) {
+            planilla.remove(aux);
+        }
+        else
+            throw new notFoundEmpleado("Empleado no existe en el sistema. No es posible despedir.");
+    }
+
+    @Override
+    public String toString() {
+        return "Empresa{" +
+                "planilla=" + planilla +
+                '}';
     }
 }

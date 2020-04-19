@@ -1,5 +1,6 @@
 package com.WEEC.x00002912;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +17,9 @@ public class Main {
                 "3. Ver empleados\n" +
                 "4. Calcular sueldo\n" +
                 "5. Mostrar totales\n" +
-                "0. Salir";
+                "0. Salir\n" +
+                "\n" +
+                "Opción seleccionada: ";
 
         String menuadd = "Ingrese el número correspondiente al tipo de empleado que desea agregar\n" +
                 "1. Servicio profesional\n" +
@@ -27,8 +30,18 @@ public class Main {
 
         do {
             System.out.println(menu);
-            op = scan.nextByte();
-            scan.nextLine();
+            while (true) {
+                try {
+                    op = scan.nextByte();
+                    scan.nextLine();
+                    System.out.println("Opcion ingresada " + op);
+                    break;
+                } catch (InputMismatchException exception) {
+                    scan.nextLine();
+                    System.out.println("Introduzca un número:");
+                }
+            }
+
 
             switch (op) {
                 case 1:
@@ -36,13 +49,65 @@ public class Main {
 
                     do {
                         System.out.println(menuadd);
-                        op2 = scan.nextByte();
-                        scan.nextLine();
+
+                        while (true) {
+                            try {
+                                op2 = scan.nextByte();
+                                scan.nextLine();
+                                System.out.println("Opcion ingresada " + op2);
+                                break;
+                            } catch (InputMismatchException exception) {
+                                scan.nextLine();
+                                System.out.println("Introduzca un número:");
+                            }
+                        }
 
                         switch (op2) {
                             case 1:
                                 int mesesEmpleado;
-                                boolean mesesValido = false;
+                                System.out.print("Nombre: ");
+                                nombreEmpleado = scan.nextLine();
+                                System.out.print("Puesto: ");
+                                puestoEmpleado = scan.nextLine();
+
+                                while (true) {
+                                    try {
+                                        System.out.print("Salario: ");
+                                        salarioEmpleado = scan.nextDouble();
+                                        scan.nextLine();
+                                        break;
+                                    } catch (InputMismatchException exception) {
+                                        scan.nextLine();
+                                        System.out.println("Introduzca un número:");
+                                    }
+                                }
+
+                                while (true) {
+                                    try {
+                                        System.out.print("Duración del contrato (meses): ");
+                                        mesesEmpleado = scan.nextInt();
+                                        scan.nextLine();
+
+                                        if (mesesEmpleado < 1)
+                                            throw new InvalidDataTypeException("Ingrese un valor en meses mayor o igual a 1");
+                                        break;
+                                    } catch (InputMismatchException exception) {
+                                        scan.nextLine();
+                                        System.out.println("Introduzca un número:");
+                                    } catch (InvalidDataTypeException ex) {
+                                        System.out.println(ex.getMessage());
+
+                                    }
+                                }
+
+
+                                unaEmpresa.addEmpleado(new ServicioProfesional(nombreEmpleado, puestoEmpleado, salarioEmpleado, mesesEmpleado));
+                                op2 = 0;
+
+                                break;
+                            case 2:
+                                int extEmpleado;
+                                boolean extValido = false;
                                 System.out.print("Nombre: ");
                                 nombreEmpleado = scan.nextLine();
                                 System.out.print("Puesto: ");
@@ -50,22 +115,29 @@ public class Main {
                                 System.out.print("Salario: ");
                                 salarioEmpleado = scan.nextDouble();
                                 scan.nextLine();
-                                do {
-                                    System.out.print("Duración del contrato (meses): ");
-                                    mesesEmpleado = scan.nextInt();
-                                    scan.nextLine();
-                                    if (mesesEmpleado>0) {
-                                        mesesValido = true;
-                                        ServicioProfesional unServicio = new ServicioProfesional(nombreEmpleado,puestoEmpleado,salarioEmpleado,mesesEmpleado);
-                                    }
-                                    else
-                                        System.out.println("Ingrese un valor de meses mayor a cero");
-                                } while (mesesValido = false);
 
+                                while (true) {
+                                    try {
+                                        System.out.print("Extensión: ");
+                                        extEmpleado = scan.nextInt();
+                                        scan.nextLine();
+
+                                        if (extEmpleado < 0)
+                                            throw new InvalidDataTypeException("Ingrese un valor en meses mayor o igual a 0");
+                                        break;
+                                    } catch (InputMismatchException exception) {
+                                        scan.nextLine();
+                                        System.out.println("Introduzca un número:");
+                                    } catch (InvalidDataTypeException ex) {
+                                        System.out.println(ex.getMessage());
+
+                                    }
+                                }
+
+                                unaEmpresa.addEmpleado(new PlazaFija(nombreEmpleado, puestoEmpleado, salarioEmpleado, extEmpleado));
+                                op2 = 0;
 
                                 break;
-                            case 2:
-                                //instrucciones caso 2
                             case 0:
                                 break;
                             default:
@@ -77,9 +149,17 @@ public class Main {
 
                     break;
                 case 2:
+                    System.out.print("Ingrese el nombre del empleado a despedir: ");
+                    nombreEmpleado = scan.nextLine();
+                    try {
+                        unaEmpresa.quitEmpleado(nombreEmpleado);
+                    }catch (notFoundEmpleado ex){
+                        System.out.println(ex.getMessage());
+                    }
 
                     break;
                 case 3:
+                    unaEmpresa.getPlanilla().forEach(obj -> System.out.println(obj.toString()));
 
                     break;
                 case 4:
@@ -95,6 +175,7 @@ public class Main {
                     System.out.println("Opcion incorrecta");
                     break;
             }
+
             System.out.println();
         } while (op != 0);
 

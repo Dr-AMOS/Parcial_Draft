@@ -38,4 +38,13 @@ public abstract class Empleado {
     public void removeDocumento(String docname){
 
     }
+
+    @Override
+    public String toString() {
+        return "Empleado{" +
+                "nombre='" + nombre + '\'' +
+                ", puesto='" + puesto + '\'' +
+                ", salario=" + salario +
+                '}';
+    }
 }
