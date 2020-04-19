@@ -17,9 +17,8 @@ public class Main {
                 "3. Ver empleados\n" +
                 "4. Calcular sueldo\n" +
                 "5. Mostrar totales\n" +
-                "0. Salir\n" +
-                "\n" +
-                "Opción seleccionada: ";
+                "0. Salir\n\n" +
+                "Ingrese su opción: ";
 
         String menuadd = "Ingrese el número correspondiente al tipo de empleado que desea agregar\n" +
                 "1. Servicio profesional\n" +
@@ -34,11 +33,11 @@ public class Main {
                 try {
                     op = scan.nextByte();
                     scan.nextLine();
-                    System.out.println("Opcion ingresada " + op);
+                    System.out.println("Usted eligió: " + op);
                     break;
                 } catch (InputMismatchException exception) {
                     scan.nextLine();
-                    System.out.println("Introduzca un número:");
+                    System.out.println("Introduzca un número de las opciones:");
                 }
             }
 
@@ -58,7 +57,7 @@ public class Main {
                                 break;
                             } catch (InputMismatchException exception) {
                                 scan.nextLine();
-                                System.out.println("Introduzca un número:");
+                                System.out.println("Introduzca un número de las opciones:");
                             }
                         }
 
@@ -101,7 +100,8 @@ public class Main {
                                 }
 
 
-                                unaEmpresa.addEmpleado(new ServicioProfesional(nombreEmpleado, puestoEmpleado, salarioEmpleado, mesesEmpleado));
+                                unaEmpresa.addEmpleado(new ServicioProfesional(nombreEmpleado, puestoEmpleado, +
+                                        salarioEmpleado, mesesEmpleado));
                                 op2 = 0;
 
                                 break;
@@ -112,9 +112,18 @@ public class Main {
                                 nombreEmpleado = scan.nextLine();
                                 System.out.print("Puesto: ");
                                 puestoEmpleado = scan.nextLine();
-                                System.out.print("Salario: ");
-                                salarioEmpleado = scan.nextDouble();
-                                scan.nextLine();
+
+                                while (true) {
+                                    try {
+                                        System.out.print("Salario: ");
+                                        salarioEmpleado = scan.nextDouble();
+                                        scan.nextLine();
+                                        break;
+                                    } catch (InputMismatchException exception) {
+                                        scan.nextLine();
+                                        System.out.println("Introduzca un número:");
+                                    }
+                                }
 
                                 while (true) {
                                     try {
@@ -134,14 +143,15 @@ public class Main {
                                     }
                                 }
 
-                                unaEmpresa.addEmpleado(new PlazaFija(nombreEmpleado, puestoEmpleado, salarioEmpleado, extEmpleado));
+                                unaEmpresa.addEmpleado(new PlazaFija(nombreEmpleado, puestoEmpleado, salarioEmpleado, +
+                                        extEmpleado));
                                 op2 = 0;
 
                                 break;
                             case 0:
                                 break;
                             default:
-                                System.out.println("Opcion incorrecta");
+                                System.out.println("Opcion incorrecta!! Intente nuevamente.");
                                 break;
                         }
 
@@ -153,7 +163,7 @@ public class Main {
                     nombreEmpleado = scan.nextLine();
                     try {
                         unaEmpresa.quitEmpleado(nombreEmpleado);
-                    }catch (notFoundEmpleado ex){
+                    } catch (notFoundEmpleado ex) {
                         System.out.println(ex.getMessage());
                     }
 
@@ -163,16 +173,20 @@ public class Main {
 
                     break;
                 case 4:
+                    System.out.println("Se calcularán los sueldos netos (después de retenciones) de todos los empleados");
+                    unaEmpresa.getPlanilla().forEach(emp -> System.out.println("Nombre: " + emp.getNombre() + "," +
+                            " Salario neto: " + CalculadoraImpuestos.calcularPago(emp)));
 
                     break;
                 case 5:
+                    System.out.println("Los descuentos totales realizados a los empleados son:");
+                    System.out.println(CalculadoraImpuestos.mostrarTotales());
 
                     break;
                 case 0:
-
                     break;
                 default:
-                    System.out.println("Opcion incorrecta");
+                    System.out.println("Opcion incorrecta!! Intente nuevamente.");
                     break;
             }
 
